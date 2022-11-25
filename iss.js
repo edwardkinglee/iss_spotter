@@ -24,7 +24,7 @@ const fetchMyIP = function(callback) {
       return;
     }
     //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    const { key, ip } = JSON.parse(body);
+    const ip = JSON.parse(body).ip;
     //console.log(typeof ip);
     return callback(null, ip);
 
