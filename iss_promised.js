@@ -4,7 +4,7 @@ const request = require('request-promise-native');
   Input: None
      Returns: Promise of request for ip data, returned as JSON string
   */
-const fetchMyIP = function () {
+const fetchMyIP = function() {
   return request('https://api.ipify.org?format=json');
 };
 
