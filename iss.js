@@ -1,5 +1,5 @@
 const request = require('request');
-const api = 'http://ipwho.is/';
+
 /**
  * Makes a single API request to retrieve the user's IP address.
  * Input:
@@ -11,7 +11,7 @@ const api = 'http://ipwho.is/';
 const fetchMyIP = function(callback) {
   // use request to fetch IP address from JSON API
 
-  request(api, (error, response, body) => {
+  request('https://api.ipify.org?format=json', (error, response, body) => {
 
     if (error) {
       return callback(error, null);
@@ -33,7 +33,7 @@ const fetchMyIP = function(callback) {
 };
 
 const fetchCoordsByIP = (ip, callback) => {
-  request(api + ip, (error, response, data) => {
+  request('http://ipwho.is/' + ip, (error, response, data) => {
     if (error) {
       return callback(error, null);
     }
@@ -56,4 +56,27 @@ const fetchCoordsByIP = (ip, callback) => {
 
 };
 
-module.exports = { fetchMyIP, fetchCoordsByIP };
+const fetchISSFlyOverTimes = function(coords, callback) {
+  const url = `https://iss-flyover.herokuapp.com/json/?lat=${coords.latitude}&lon=${coords.longitude}`;
+
+  request(url, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (response.statusCode !== 200) {
+      callback(Error(`Status Code ${response.statusCode} when fetching ISS pass times: ${body}`), null);
+      return;
+    }
+
+    const passes = JSON.parse(body).response;
+    callback(null, passes);
+  });
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes };
+
+//`https://iss-flyover.herokuapp.com/json/?lat=49.27670&$lon=-123.13000
+
+//https://iss-flyover.herokuapp.com/json/?lat=49.2767&lon=-123.13000
